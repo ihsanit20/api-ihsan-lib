@@ -17,6 +17,7 @@ class User extends Authenticatable
         'password',
         'address',
         'role',
+        'customer_type',
     ];
 
     protected $hidden = [
@@ -26,5 +27,6 @@ class User extends Authenticatable
 
     protected $casts = [
         'role' => 'string',
+        'customer_type' => 'string',
     ];
 }

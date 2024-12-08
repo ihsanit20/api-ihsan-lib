@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
-   
+
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique();
             $table->string('password')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role', ['admin', 'staff', 'customer'])->default('customer');
+            $table->enum('role', ['customer', 'staff', 'admin', 'developer'])->default('customer');
             $table->enum('customer_type', ['regular', 'retailer', 'wholesale', 'distributor'])->default('regular');
             $table->timestamps();
         });

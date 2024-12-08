@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -12,12 +11,14 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => '',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'required|string|max:20',
-            'photo' => 'nullable|string',
-            'role' => 'required|string|in:developer,admin,instructor,student',
+            'phone' => 'required|string|max:20|unique:users,phone',
+            'password' => 'nullable|string|min:8|confirmed',
+            'address' => 'nullable|string',
+            'role' => 'required|string|in:customer,staff,admin,developer',
+            'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
         ]);
+
+        $validated['role'] = $validated['role'] ?? 'customer';
 
         $user = User::create($validated);
 
@@ -28,15 +29,15 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => '',
+            'phone' => 'sometimes|string|max:20|unique:users,phone,' . $user->id,
             'password' => 'sometimes|string|min:8|confirmed',
-            'phone' => 'sometimes|string|max:20',
-            'photo' => 'nullable|string',
-            'role' => 'required|string|in:developer,admin,instructor,student',
+            'address' => 'nullable|string',
+            'role' => 'sometimes|string|in:customer,staff,admin,developer',
+            'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
         ]);
 
-        if($request->role == 'developer' && auth('sanctum')?->user()?->role != 'developer') {
-            return abort(404);
+        if ($request->has('role') && $request->role === 'developer' && auth('sanctum')?->user()?->role !== 'developer') {
+            return abort(403, 'Unauthorized role update.');
         }
 
         $user->update($validated);
@@ -47,11 +48,11 @@ class UserController extends Controller
     public function getUsers()
     {
         $users = User::query()
-            ->when(auth('sanctum')?->user()?->role != 'developer', function ($query) {
+            ->when(auth('sanctum')?->user()?->role !== 'developer', function ($query) {
                 $query->whereNot('role', 'developer');
             })
             ->get();
-            
+
         return response()->json($users);
     }
 }
