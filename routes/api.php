@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/products', [ProductController::class, 'store']);
         Route::put('/products/{id}', [ProductController::class, 'update']);
+        Route::post('/products/{id}/photo', [ProductController::class, 'uploadPhoto']);
 
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
