@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -78,10 +79,18 @@ class ProductController extends Controller
             'photo' => 'required|image|max:2048',
         ]);
 
-        $path = $request->file('photo')->store('photos', 's3');
+        $image = Image::read($request->file('photo'));
+
+        $image->cover(300, 400);
+
+        $path = 'product/photos/' . $product->id . '.webp';
+
+        Storage::disk('s3')->put($path, $image->toWebp(100));
 
         $s3Url = Storage::disk('s3')->url($path);
+
         $product->photo = $s3Url;
+
         $product->save();
 
         return response()->json(['message' => 'Photo uploaded successfully', 'photo' => $s3Url], 200);
