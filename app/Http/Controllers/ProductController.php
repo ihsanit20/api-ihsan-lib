@@ -76,7 +76,7 @@ class ProductController extends Controller
         }
 
         $request->validate([
-            'photo' => 'required|image|max:2048',
+            'photo' => 'required|image|max:6144',
         ]);
 
         $image = Image::read($request->file('photo'));
