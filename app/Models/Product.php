@@ -26,6 +26,7 @@ class Product extends Model
     public function authors()
     {
         return $this->belongsToMany(Author::class, 'product_authors')
+                    ->withPivot('role')
                     ->withTimestamps();
     }
 
