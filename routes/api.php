@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -23,14 +24,11 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
-
+Route::get('/authors', [AuthorController::class, 'index']);
+Route::get('/authors/{id}', [AuthorController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-
-
-    Route::middleware(['role:customer,staff,admin,developer'])->group(function () {
-
-    });
+// Normal auth routs here
 
     Route::middleware(['role:staff,admin,developer'])->group(function () {
 
@@ -45,15 +43,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
+        Route::post('/authors', [AuthorController::class, 'store']);
+        Route::put('/authors/{id}', [AuthorController::class, 'update']);
+        Route::post('/authors/{id}/photo', [AuthorController::class, 'uploadPhoto']);
     });
 
     Route::middleware(['role:admin,developer'])->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
         Route::delete('/products/{id}', [ProductController::class, 'destroy']);
-        Route::post('/categories', [CategoryController::class, 'store']);
 
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+        Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
     });
 
     Route::middleware(['role:developer'])->group(function () {
@@ -61,6 +64,3 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 });
-
-
-

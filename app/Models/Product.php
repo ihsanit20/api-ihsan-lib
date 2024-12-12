@@ -23,6 +23,12 @@ class Product extends Model
                     ->withTimestamps();
     }
 
+    public function authors()
+    {
+        return $this->belongsToMany(Author::class, 'product_authors')
+                    ->withTimestamps();
+    }
+
     protected function photo(): Attribute
     {
         return Attribute::make(
