@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,8 +28,12 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/authors', [AuthorController::class, 'index']);
 Route::get('/authors/{id}', [AuthorController::class, 'show']);
 
+Route::get('/stocks', [StockController::class, 'index']);
+Route::get('/stocks/{id}', [StockController::class, 'show']);
+
+
 Route::middleware('auth:sanctum')->group(function () {
-// Normal auth routs here
+    // Normal auth routs here
 
     Route::middleware(['role:staff,admin,developer'])->group(function () {
 
@@ -47,6 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/authors', [AuthorController::class, 'store']);
         Route::put('/authors/{id}', [AuthorController::class, 'update']);
         Route::post('/authors/{id}/photo', [AuthorController::class, 'uploadPhoto']);
+
+        Route::post('/stocks', [StockController::class, 'store']);
+        Route::put('/stocks/{id}', [StockController::class, 'update']);
     });
 
     Route::middleware(['role:admin,developer'])->group(function () {
@@ -57,6 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
         Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
+        
+        Route::delete('/stocks/{id}', [StockController::class, 'destroy']);
     });
 
     Route::middleware(['role:developer'])->group(function () {
