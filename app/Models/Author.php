@@ -29,5 +29,4 @@ class Author extends Model
             get: fn ($value) => $value ?? ('https://ui-avatars.com/api/?name=' . str_replace(' ', '+', $this->name)),
         );
     }
-
 }

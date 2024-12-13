@@ -9,7 +9,7 @@ class StockController extends Controller
 {
     public function index()
     {
-        $stocks = Stock::with('product')->get();
+        $stocks = Stock::with('product:id,name,photo')->get();
         return response()->json($stocks);
     }
 
