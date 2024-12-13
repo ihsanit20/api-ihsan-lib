@@ -30,12 +30,9 @@ class ProductController extends Controller
 
         $product = Product::create($request->only('name', 'ISBN', 'description'));
 
-        // Attach categories
         if ($request->has('categories')) {
             $product->categories()->attach($request->categories);
         }
-
-        // Attach authors with roles
         if ($request->has('authors')) {
             $authors = collect($request->authors)->mapWithKeys(function ($author) {
                 return [$author['id'] => ['role' => $author['role']]];
@@ -68,12 +65,10 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($request->only('name', 'ISBN', 'description'));
 
-        // Sync categories
         if ($request->has('categories')) {
             $product->categories()->sync($request->categories);
         }
 
-        // Sync authors with roles
         if ($request->has('authors')) {
             $authors = collect($request->authors)->mapWithKeys(function ($author) {
                 return [$author['id'] => ['role' => $author['role']]];
