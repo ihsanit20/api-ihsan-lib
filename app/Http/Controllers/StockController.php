@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $stocks = Stock::with('product:id,name,photo')->get();
+        $productId = $request->query('product_id');
+
+        $stocks = Stock::with('product:id,name,photo')
+            ->when($productId, function ($query, $productId) {
+                $query->where('product_id', $productId);
+            })
+            ->get();
+
         return response()->json($stocks);
     }
 
@@ -56,4 +64,24 @@ class StockController extends Controller
 
         return response()->json(['message' => 'Stock deleted successfully']);
     }
+
+    public function getAvailableStocks()
+    {
+        $availableStocks = Product::withSum('stocks as total_stock', 'quantity')
+            ->withSum('orderDetails as total_sold', 'quantity')
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'photo' => $product->photo,
+                    'total_stock' => $product->total_stock ?? 0,
+                    'total_sold' => $product->total_sold ?? 0,
+                    'available_stock' => ($product->total_stock ?? 0) - ($product->total_sold ?? 0),
+                ];
+            });
+
+        return response()->json($availableStocks);
+    }
+
 }
