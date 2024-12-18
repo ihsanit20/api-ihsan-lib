@@ -32,6 +32,7 @@ Route::get('/authors/{id}', [AuthorController::class, 'show']);
 Route::get('/stocks', [StockController::class, 'index']);
 Route::get('/stocks/{id}', [StockController::class, 'show']);
 Route::get('/available-stocks', [StockController::class, 'getAvailableStocks']);
+Route::get('/available-stock/{productId}', [StockController::class, 'getAvailableStockByProductId']);
 
 
 Route::get('/products/search', [ProductController::class, 'search']);
@@ -39,7 +40,7 @@ Route::get('/products/find', [ProductController::class, 'find']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    
+
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
 

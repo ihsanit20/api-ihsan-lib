@@ -84,4 +84,22 @@ class StockController extends Controller
         return response()->json($availableStocks);
     }
 
+    public function getAvailableStockByProductId($productId)
+    {
+        $product = Product::withSum('stocks as total_stock', 'quantity')
+            ->withSum('orderDetails as total_sold', 'quantity')
+            ->findOrFail($productId);
+
+        $availableStock = ($product->total_stock ?? 0) - ($product->total_sold ?? 0);
+
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'photo' => $product->photo,
+            'total_stock' => $product->total_stock ?? 0,
+            'total_sold' => $product->total_sold ?? 0,
+            'available_stock' => $availableStock,
+        ]);
+    }
+
 }
