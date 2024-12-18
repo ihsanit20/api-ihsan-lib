@@ -15,6 +15,41 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->get('query', '');
+        $categoryId = $request->get('category_id', null);
+
+        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
+            ->when($query, function ($q) use ($query) {
+                $q->where('name', 'like', "%$query%")
+                  ->orWhere('ISBN', 'like', "%$query%");
+            })
+            ->when($categoryId, function ($q) use ($categoryId) {
+                $q->whereHas('categories', fn($query) => $query->where('id', $categoryId));
+            })
+            ->get();
+
+        return response()->json($products);
+    }
+
+    public function find(Request $request)
+    {
+        $id = $request->get('id');
+        $barcode = $request->get('barcode');
+
+        $product = Product::with(['categories:id,name', 'authors:id,name,photo'])
+            ->when($id, fn($query) => $query->where('id', $id))
+            ->when($barcode, fn($query) => $query->where('barcode', $barcode))
+            ->first();
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        return response()->json($product);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

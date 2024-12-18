@@ -32,18 +32,23 @@ Route::get('/authors/{id}', [AuthorController::class, 'show']);
 Route::get('/stocks', [StockController::class, 'index']);
 Route::get('/stocks/{id}', [StockController::class, 'show']);
 
-Route::get('/orders', [OrderController::class, 'index']);
-Route::post('/orders', [OrderController::class, 'store']);
-Route::get('/orders/{id}', [OrderController::class, 'show']);
-Route::put('/orders/{id}/status', [OrderController::class, 'update']);
-Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel']);
-Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
-Route::get('/orders/report', [OrderController::class, 'report']);
+
+Route::get('/products/search', [ProductController::class, 'search']);
+Route::get('/products/find', [ProductController::class, 'find']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Normal auth routs here
+    
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
 
     Route::middleware(['role:staff,admin,developer'])->group(function () {
+
+        Route::get('/orders', [OrderController::class, 'index']);
+        Route::put('/orders/{id}/status', [OrderController::class, 'update']);
+        Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel']);
+        Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+        Route::get('/orders/report', [OrderController::class, 'report']);
 
         Route::post('/users', [UserController::class, 'store']);
         Route::get('/users/{user}', [UserController::class, 'show']);
