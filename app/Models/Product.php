@@ -39,6 +39,12 @@ class Product extends Model
         return $this->hasMany(Stock::class);
     }
 
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id');
+    }
+
+
     // Accessors
 
     protected function photo(): Attribute

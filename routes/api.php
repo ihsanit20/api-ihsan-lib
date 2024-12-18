@@ -31,6 +31,7 @@ Route::get('/authors/{id}', [AuthorController::class, 'show']);
 
 Route::get('/stocks', [StockController::class, 'index']);
 Route::get('/stocks/{id}', [StockController::class, 'show']);
+Route::get('/available-stocks', [StockController::class, 'getAvailableStocks']);
 
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
