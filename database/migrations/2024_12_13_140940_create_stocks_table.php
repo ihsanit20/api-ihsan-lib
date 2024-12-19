@@ -13,8 +13,6 @@ class CreateStocksTable extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('production_price', 10, 0);
-            $table->decimal('mrp', 10, 0);
-            $table->decimal('selling_price', 10, 0); 
             $table->date('stock_date')->nullable();
             $table->timestamps();
         });

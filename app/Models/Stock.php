@@ -13,8 +13,6 @@ class Stock extends Model
         'product_id',
         'quantity',
         'production_price',
-        'mrp',
-        'selling_price',
         'stock_date',
     ];
 

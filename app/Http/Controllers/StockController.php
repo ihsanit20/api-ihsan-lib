@@ -12,7 +12,7 @@ class StockController extends Controller
     {
         $productId = $request->query('product_id');
 
-        $stocks = Stock::with('product:id,name,photo')
+        $stocks = Stock::with('product:id,name,photo,mrp,selling_price')
             ->when($productId, function ($query, $productId) {
                 $query->where('product_id', $productId);
             })
@@ -70,6 +70,8 @@ class StockController extends Controller
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
+                    'mrp' => $product->mrp,
+                    'selling_price' => $product->selling_price,
                     'photo' => $product->photo,
                     'total_stock' => $product->total_stock ?? 0,
                     'total_sold' => $product->total_sold ?? 0,
@@ -91,6 +93,8 @@ class StockController extends Controller
         return response()->json([
             'id' => $product->id,
             'name' => $product->name,
+            'mrp' => $product->mrp,
+            'selling_price' => $product->selling_price,
             'photo' => $product->photo,
             'total_stock' => $product->total_stock ?? 0,
             'total_sold' => $product->total_sold ?? 0,
