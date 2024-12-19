@@ -27,8 +27,6 @@ class StockController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
             'production_price' => 'required|numeric|min:0',
-            'mrp' => 'required|numeric|min:0',
-            'selling_price' => 'required|numeric|min:0',
             'stock_date' => 'nullable|date',
         ]);
 
@@ -47,8 +45,6 @@ class StockController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
             'production_price' => 'required|numeric|min:0',
-            'mrp' => 'required|numeric|min:0',
-            'selling_price' => 'required|numeric|min:0',
             'stock_date' => 'nullable|date',
         ]);
 

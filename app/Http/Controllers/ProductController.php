@@ -23,7 +23,7 @@ class ProductController extends Controller
         $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
             ->when($query, function ($q) use ($query) {
                 $q->where('name', 'like', "%$query%")
-                  ->orWhere('ISBN', 'like', "%$query%");
+                    ->orWhere('ISBN', 'like', "%$query%");
             })
             ->when($categoryId, function ($q) use ($categoryId) {
                 $q->whereHas('categories', fn($query) => $query->where('id', $categoryId));
@@ -54,6 +54,8 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'mrp' => 'required|numeric|min:0',
+            'selling_price' => 'required|numeric|min:0',
             'ISBN' => 'nullable|string',
             'description' => 'nullable|string',
             'categories' => 'nullable|array',
@@ -63,7 +65,13 @@ class ProductController extends Controller
             'authors.*.role' => 'required|in:author,translator',
         ]);
 
-        $product = Product::create($request->only('name', 'ISBN', 'description'));
+        $product = Product::create($request->only(
+            'name',
+            'ISBN',
+            'description',
+            'mrp',
+            'selling_price'
+        ));
 
         if ($request->has('categories')) {
             $product->categories()->attach($request->categories);
@@ -88,6 +96,8 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
+            'mrp' => 'required|numeric|min:0',
+            'selling_price' => 'required|numeric|min:0',
             'ISBN' => 'nullable|string',
             'description' => 'nullable|string',
             'categories' => 'nullable|array',
@@ -98,7 +108,13 @@ class ProductController extends Controller
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update($request->only('name', 'ISBN', 'description'));
+        $product->update($request->only(
+            'name',
+            'ISBN',
+            'description',
+            'mrp',
+            'selling_price'
+        ));
 
         if ($request->has('categories')) {
             $product->categories()->sync($request->categories);

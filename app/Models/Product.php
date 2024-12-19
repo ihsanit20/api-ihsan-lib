@@ -12,14 +12,14 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'mrp',
+        'selling_price',
         'ISBN',
         'description',
         'photo',
     ];
 
     protected $with = ['categories', 'authors'];
-
-    protected $appends = ['mrp', 'selling_price'];
 
     public function categories()
     {
@@ -30,7 +30,7 @@ class Product extends Model
     public function authors()
     {
         return $this->belongsToMany(Author::class, 'product_authors')
-                    ->withPivot('role') // Role (e.g., author/translator)
+                    ->withPivot('role')
                     ->withTimestamps();
     }
 
@@ -44,27 +44,10 @@ class Product extends Model
         return $this->hasMany(OrderDetail::class, 'product_id');
     }
 
-
-    // Accessors
-
     protected function photo(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value ?? 'https://via.placeholder.com/300x400/0284c7?text=No+Photo',
-        );
-    }
-
-    protected function mrp(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->stocks()->orderBy('stock_date', 'desc')->first()?->mrp,
-        );
-    }
-
-    protected function sellingPrice(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->stocks()->orderBy('stock_date', 'desc')->first()?->selling_price,
         );
     }
 }
