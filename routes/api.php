@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
@@ -20,8 +21,12 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('check-phone', [AuthController::class, 'checkPhone']);
 
+Route::get('/products/search', [ProductController::class, 'search']);
+Route::get('/products/find', [ProductController::class, 'find']);
+
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
@@ -35,16 +40,17 @@ Route::get('/available-stocks', [StockController::class, 'getAvailableStocks']);
 Route::get('/available-stock/{productId}', [StockController::class, 'getAvailableStockByProductId']);
 
 
-Route::get('/products/search', [ProductController::class, 'search']);
-Route::get('/products/find', [ProductController::class, 'find']);
-
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
 
+    Route::get('/payments/{id}', [PaymentController::class, 'show']);
+    Route::post('/payments', [PaymentController::class, 'store']);
+
     Route::middleware(['role:staff,admin,developer'])->group(function () {
+        Route::get('/payments', [PaymentController::class, 'index']);
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::put('/orders/{id}/status', [OrderController::class, 'update']);

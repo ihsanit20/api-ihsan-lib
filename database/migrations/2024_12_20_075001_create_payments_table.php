@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('total_price', 10, 0);
-            $table->decimal('total_paid', 10, 0)->default(0);
-            $table->decimal('remaining_due', 10, 0);
-            $table->enum('type', ['online', 'offline'])->default('offline');
-            $table->enum('status', ['Pending', 'Completed', 'Cancelled'])->default('Pending');
-            $table->date('order_date');
+            $table->decimal('amount', 10, 0);
+            $table->enum('payment_method', ['Cash', 'Card', 'Mobile Banking', 'Other'])->default('Cash');
+            $table->text('remarks')->nullable();
+            $table->timestamp('payment_date')->default(now());
             $table->timestamps();
         });
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('payments');
     }
 };

@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::with(['user:id,name,phone', 'orderDetails.product'])
+        $orders = Order::with(['user:id,name,phone', 'orderDetails.product', 'payments'])
             ->when($request->type, fn($query, $type) => $query->where('type', $type))
             ->when($request->status, fn($query, $status) => $query->where('status', $status))
             ->orderBy('created_at', 'desc')
@@ -28,13 +29,20 @@ class OrderController extends Controller
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.price' => 'required|numeric|min:0',
             'type' => 'nullable|in:online,offline',
+            'payment.amount' => 'nullable|numeric|min:0',
+            'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
+            'payment.remarks' => 'nullable|string',
         ]);
+
+        $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
 
         $order = Order::create([
             'user_id' => $request->user_id,
-            'total_price' => array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products)),
+            'total_price' => $totalPrice,
+            'total_paid' => $request->payment['amount'] ?? 0,
+            'remaining_due' => $totalPrice - ($request->payment['amount'] ?? 0),
             'type' => $request->type ?? 'offline',
-            'status' => 'Pending',
+            'status' => $totalPrice === ($request->payment['amount'] ?? 0) ? 'Completed' : 'Pending',
             'order_date' => now(),
         ]);
 
@@ -47,12 +55,23 @@ class OrderController extends Controller
             ]);
         }
 
-        return response()->json($order->load('orderDetails.product'), 201);
+        if (!empty($request->payment['amount'])) {
+            Payment::create([
+                'order_id' => $order->id,
+                'user_id' => $request->user_id,
+                'amount' => $request->payment['amount'],
+                'payment_method' => $request->payment['method'] ?? 'Cash',
+                'remarks' => $request->payment['remarks'] ?? null,
+                'payment_date' => now(),
+            ]);
+        }
+
+        return response()->json($order->load('orderDetails.product', 'payments'), 201);
     }
 
     public function show($id)
     {
-        $order = Order::with('orderDetails.product')->findOrFail($id);
+        $order = Order::with('orderDetails.product', 'payments')->findOrFail($id);
         return response()->json($order);
     }
 
@@ -100,7 +119,7 @@ class OrderController extends Controller
 
     public function report(Request $request)
     {
-        $orders = Order::with('orderDetails.product')
+        $orders = Order::with('orderDetails.product', 'payments')
             ->when($request->type, fn($query, $type) => $query->where('type', $type))
             ->when($request->date_from, fn($query, $date) => $query->where('order_date', '>=', $date))
             ->when($request->date_to, fn($query, $date) => $query->where('order_date', '<=', $date))
