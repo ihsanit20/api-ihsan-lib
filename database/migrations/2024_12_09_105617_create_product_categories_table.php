@@ -10,8 +10,8 @@ class CreateProductCategoriesTable extends Migration
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

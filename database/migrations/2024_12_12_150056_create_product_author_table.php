@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('product_authors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('author_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('author_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum('role', ['author', 'translator'])->default('author');
             $table->timestamps();
         });
