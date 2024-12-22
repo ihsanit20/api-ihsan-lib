@@ -32,18 +32,25 @@ class OrderController extends Controller
             'payment.amount' => 'nullable|numeric|min:0',
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
+            'discount' => 'nullable|numeric|min:0',
         ]);
 
         $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
 
+        $discount = $request->discount ?? 0;
+        $payableAmount = $totalPrice - $discount;
+
+        $totalPaid = $request->payment['amount'] ?? 0;
+
         $order = Order::create([
             'user_id' => $request->user_id,
             'total_price' => $totalPrice,
-            'total_paid' => $request->payment['amount'] ?? 0,
-            'remaining_due' => $totalPrice - ($request->payment['amount'] ?? 0),
+            'discount' => $discount,
+            'payable_amount' => $payableAmount,
+            'total_paid' => $totalPaid,
+            'remaining_due' => $payableAmount - $totalPaid,
             'type' => $request->type ?? 'offline',
-            'status' => $totalPrice === ($request->payment['amount'] ?? 0) ? 'Completed' : 'Pending',
-            'order_date' => now(),
+            'status' => $payableAmount === $totalPaid ? 'Completed' : 'Pending',
         ]);
 
         foreach ($request->products as $product) {
@@ -59,7 +66,7 @@ class OrderController extends Controller
             Payment::create([
                 'order_id' => $order->id,
                 'user_id' => $request->user_id,
-                'amount' => $request->payment['amount'],
+                'amount' => $totalPaid,
                 'payment_method' => $request->payment['method'] ?? 'Cash',
                 'remarks' => $request->payment['remarks'] ?? null,
                 'payment_date' => now(),
@@ -68,6 +75,7 @@ class OrderController extends Controller
 
         return response()->json($order->load('orderDetails.product', 'payments'), 201);
     }
+
 
     public function show($id)
     {
