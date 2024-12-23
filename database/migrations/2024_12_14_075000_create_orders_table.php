@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('payable_amount', 10, 0)->default(0);
             $table->decimal('total_paid', 10, 0)->default(0);
             $table->decimal('remaining_due', 10, 0);
+            $table->decimal('adjustment', 10, 0)->default(0);
             $table->enum('status', ['Pending', 'Completed', 'Cancelled'])->default('Pending');
             $table->timestamps();
         });

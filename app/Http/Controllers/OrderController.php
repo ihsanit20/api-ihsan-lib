@@ -33,14 +33,18 @@ class OrderController extends Controller
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
             'discount' => 'nullable|numeric|min:0',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100', // নতুন ফিল্ড
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'adjustment' => 'nullable|numeric', // নতুন ফিল্ড
         ]);
 
         $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
 
         $discountPercentage = $request->discount_percentage ?? 0;
         $discount = ($discountPercentage > 0) ? ($totalPrice * $discountPercentage / 100) : ($request->discount ?? 0);
-        $payableAmount = $totalPrice - $discount;
+
+        $adjustment = $request->adjustment ?? 0; // নতুন ফিল্ড
+
+        $payableAmount = $totalPrice - $discount + $adjustment; // নতুন ফিল্ড অন্তর্ভুক্ত
 
         $totalPaid = $request->payment['amount'] ?? 0;
 
@@ -49,6 +53,7 @@ class OrderController extends Controller
             'total_price' => $totalPrice,
             'discount_percentage' => $discountPercentage,
             'discount' => $discount,
+            'adjustment' => $adjustment, // নতুন ফিল্ড
             'payable_amount' => $payableAmount,
             'total_paid' => $totalPaid,
             'remaining_due' => $payableAmount - $totalPaid,
