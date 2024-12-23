@@ -33,11 +33,13 @@ class OrderController extends Controller
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
             'discount' => 'nullable|numeric|min:0',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100', // নতুন ফিল্ড
         ]);
 
         $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
 
-        $discount = $request->discount ?? 0;
+        $discountPercentage = $request->discount_percentage ?? 0;
+        $discount = ($discountPercentage > 0) ? ($totalPrice * $discountPercentage / 100) : ($request->discount ?? 0);
         $payableAmount = $totalPrice - $discount;
 
         $totalPaid = $request->payment['amount'] ?? 0;
@@ -45,6 +47,7 @@ class OrderController extends Controller
         $order = Order::create([
             'user_id' => $request->user_id,
             'total_price' => $totalPrice,
+            'discount_percentage' => $discountPercentage,
             'discount' => $discount,
             'payable_amount' => $payableAmount,
             'total_paid' => $totalPaid,
@@ -75,7 +78,6 @@ class OrderController extends Controller
 
         return response()->json($order->load('orderDetails.product', 'payments'), 201);
     }
-
 
     public function show($id)
     {

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->enum('type', ['online', 'offline'])->default('offline');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total_price', 10, 0);
+            $table->decimal('discount_percentage', 5, 0)->default(0);
             $table->decimal('discount', 10, 0)->default(0);
             $table->decimal('payable_amount', 10, 0)->default(0);
             $table->decimal('total_paid', 10, 0)->default(0);
