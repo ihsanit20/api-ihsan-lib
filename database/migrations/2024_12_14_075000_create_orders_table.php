@@ -15,11 +15,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total_price', 10, 0);
             $table->decimal('discount_percentage', 5, 0)->default(0);
-            $table->decimal('discount', 10, 0)->default(0);
+            $table->decimal('discount_amount', 10, 0)->default(0);
+            $table->decimal('adjust_amount', 10, 0)->default(0);
             $table->decimal('payable_amount', 10, 0)->default(0);
-            $table->decimal('total_paid', 10, 0)->default(0);
-            $table->decimal('remaining_due', 10, 0);
-            $table->decimal('adjustment', 10, 0)->default(0);
+            $table->decimal('paid_amount', 10, 0)->default(0);
+            $table->decimal('due_amount', 10, 0);
             $table->enum('status', ['Pending', 'Completed', 'Cancelled'])->default('Pending');
             $table->timestamps();
         });

@@ -33,7 +33,7 @@ class OrderController extends Controller
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
             'discount' => 'nullable|numeric|min:0',
-            'discount_percentage' => 'nullable|numeric|min:0',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
             'adjustment' => 'nullable|numeric',
         ]);
 
@@ -42,23 +42,26 @@ class OrderController extends Controller
         $discountPercentage = $request->discount_percentage ?? 0;
         $discount = ($discountPercentage > 0) ? ($totalPrice * $discountPercentage / 100) : ($request->discount ?? 0);
 
-        $adjustment = $request->adjustment ?? 0; // নতুন ফিল্ড
+        $adjustment = $request->adjustment ?? 0;
 
-        $payableAmount = $totalPrice - $discount + $adjustment; // নতুন ফিল্ড অন্তর্ভুক্ত
+        $payableAmount = $totalPrice - $discount - $adjustment; // Adjustment now reduces payable amount
 
         $totalPaid = $request->payment['amount'] ?? 0;
+
+        $remainingDue = $payableAmount - $totalPaid;
+        $status = ($remainingDue > 0) ? 'Pending' : 'Completed';
 
         $order = Order::create([
             'user_id' => $request->user_id,
             'total_price' => $totalPrice,
             'discount_percentage' => $discountPercentage,
             'discount' => $discount,
-            'adjustment' => $adjustment, // নতুন ফিল্ড
+            'adjustment' => $adjustment,
             'payable_amount' => $payableAmount,
             'total_paid' => $totalPaid,
-            'remaining_due' => $payableAmount - $totalPaid,
+            'remaining_due' => $remainingDue,
             'type' => $request->type ?? 'offline',
-            'status' => $payableAmount === $totalPaid ? 'Completed' : 'Pending',
+            'status' => $status,
         ]);
 
         foreach ($request->products as $product) {
