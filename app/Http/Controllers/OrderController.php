@@ -32,34 +32,34 @@ class OrderController extends Controller
             'payment.amount' => 'nullable|numeric|min:0',
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
-            'discount' => 'nullable|numeric|min:0',
+            'discount_amount' => 'nullable|numeric|min:0',
             'discount_percentage' => 'nullable|numeric|min:0|max:100',
-            'adjustment' => 'nullable|numeric',
+            'adjust_amount' => 'nullable|numeric',
         ]);
 
         $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
 
         $discountPercentage = $request->discount_percentage ?? 0;
-        $discount = ($discountPercentage > 0) ? ($totalPrice * $discountPercentage / 100) : ($request->discount ?? 0);
+        $discountAmount = ($discountPercentage > 0) ? ($totalPrice * $discountPercentage / 100) : ($request->discount_amount ?? 0);
 
-        $adjustment = $request->adjustment ?? 0;
+        $adjustAmount = $request->adjust_amount ?? 0;
 
-        $payableAmount = $totalPrice - $discount - $adjustment; // Adjustment now reduces payable amount
+        $payableAmount = $totalPrice - $discountAmount - $adjustAmount; // Adjust reduces payable amount
 
-        $totalPaid = $request->payment['amount'] ?? 0;
+        $paidAmount = $request->payment['amount'] ?? 0;
 
-        $remainingDue = $payableAmount - $totalPaid;
-        $status = ($remainingDue > 0) ? 'Pending' : 'Completed';
+        $dueAmount = $payableAmount - $paidAmount;
+        $status = ($dueAmount > 0) ? 'Pending' : 'Completed';
 
         $order = Order::create([
             'user_id' => $request->user_id,
             'total_price' => $totalPrice,
             'discount_percentage' => $discountPercentage,
-            'discount' => $discount,
-            'adjustment' => $adjustment,
+            'discount_amount' => $discountAmount,
+            'adjust_amount' => $adjustAmount,
             'payable_amount' => $payableAmount,
-            'total_paid' => $totalPaid,
-            'remaining_due' => $remainingDue,
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
             'type' => $request->type ?? 'offline',
             'status' => $status,
         ]);
@@ -77,7 +77,7 @@ class OrderController extends Controller
             Payment::create([
                 'order_id' => $order->id,
                 'user_id' => $request->user_id,
-                'amount' => $totalPaid,
+                'amount' => $paidAmount,
                 'payment_method' => $request->payment['method'] ?? 'Cash',
                 'remarks' => $request->payment['remarks'] ?? null,
                 'payment_date' => now(),
