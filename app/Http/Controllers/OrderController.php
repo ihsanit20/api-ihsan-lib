@@ -33,8 +33,8 @@ class OrderController extends Controller
             'payment.method' => 'nullable|in:Cash,Card,Mobile Banking,Other',
             'payment.remarks' => 'nullable|string',
             'discount' => 'nullable|numeric|min:0',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100',
-            'adjustment' => 'nullable|numeric', // নতুন ফিল্ড
+            'discount_percentage' => 'nullable|numeric|min:0',
+            'adjustment' => 'nullable|numeric',
         ]);
 
         $totalPrice = array_sum(array_map(fn($item) => $item['quantity'] * $item['price'], $request->products));
