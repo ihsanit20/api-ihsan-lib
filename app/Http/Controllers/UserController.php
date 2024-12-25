@@ -55,4 +55,41 @@ class UserController extends Controller
 
         return response()->json($users);
     }
+
+    public function searchUser(Request $request)
+    {
+        $id = $request->query('id');
+        $phone = $request->query('phone');
+
+        if (!$id && !$phone) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Provide either ID or Phone number.',
+            ], 400);
+        }
+
+        $query = User::query();
+
+        if ($id) {
+            $query->where('id', $id);
+        }
+
+        if ($phone) {
+            $query->where('phone', $phone);
+        }
+
+        $user = $query->first();
+
+        if ($user) {
+            return response()->json([
+                'status' => 'found',
+                'user' => $user,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'not_found',
+            'message' => 'User not found. You can create a new user.',
+        ]);
+    }
 }

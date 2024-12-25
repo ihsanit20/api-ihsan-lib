@@ -40,6 +40,7 @@ Route::get('/available-stocks', [StockController::class, 'getAvailableStocks']);
 Route::get('/available-stock/{productId}', [StockController::class, 'getAvailableStockByProductId']);
 
 
+Route::get('/user-search', [UserController::class, 'searchUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
