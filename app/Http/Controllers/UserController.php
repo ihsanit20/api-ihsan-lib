@@ -12,13 +12,13 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20|unique:users,phone',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|confirmed',
             'address' => 'nullable|string',
-            'role' => 'required|string|in:customer,staff,admin,developer',
+            'role' => 'nullable|string|in:customer,staff,admin,developer', // Removed 'required'
             'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
         ]);
 
-        $validated['role'] = $validated['role'] ?? 'customer';
+        $validated['role'] = $validated['role'] ?? 'customer'; // Default to 'customer' if not provided
 
         $user = User::create($validated);
 
@@ -30,9 +30,9 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'phone' => 'sometimes|string|max:20|unique:users,phone,' . $user->id,
-            'password' => 'sometimes|string|min:8|confirmed',
+            'password' => 'sometimes|string|confirmed',
             'address' => 'nullable|string',
-            'role' => 'sometimes|string|in:customer,staff,admin,developer',
+            'role' => 'nullable|string|in:customer,staff,admin,developer', // Removed 'required'
             'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
         ]);
 

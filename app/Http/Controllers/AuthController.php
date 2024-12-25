@@ -14,7 +14,7 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
         $user = User::create([
@@ -48,7 +48,7 @@ class AuthController extends Controller
     public function checkPhone(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string', 
+            'phone' => 'required|string',
         ]);
 
         $phone = $request->input('phone');
@@ -57,12 +57,12 @@ class AuthController extends Controller
 
         return response()->json(['isRegistered' => $isRegistered]);
     }
-    
+
     public function changePassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:6|confirmed',
+            'new_password' => 'required|string|confirmed',
         ]);
 
         $user = Auth::user();
@@ -80,21 +80,21 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
-    
+
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
-    
+
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->date_of_birth = $request->date_of_birth;
         $user->email = $request->email;
         $user->address = $request->address;
-    
+
         $user->save();
-    
+
         return response()->json(['user' => $user], 200);
     }
 
