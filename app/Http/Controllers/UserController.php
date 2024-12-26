@@ -8,22 +8,33 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20|unique:users,phone',
-            'password' => 'nullable|string|confirmed',
-            'address' => 'nullable|string',
-            'role' => 'nullable|string|in:customer,staff,admin,developer', // Removed 'required'
-            'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'phone' => 'required|string|max:20|unique:users,phone',
+        'password' => 'nullable|string|confirmed',
+        'address' => 'nullable|string',
+        'role' => 'nullable|string|in:customer,staff,admin,developer',
+        'customer_type' => 'nullable|string|in:regular,retailer,wholesale,distributor',
+    ], [
+        // কাস্টম মেসেজ
+        'name.required' => 'নাম প্রদান করা আবশ্যক।',
+        'name.max' => 'নামের সর্বোচ্চ দৈর্ঘ্য ২৫৫ অক্ষর হতে পারে।',
+        'phone.required' => 'ফোন নম্বর প্রদান করা আবশ্যক।',
+        'phone.unique' => 'ইতোমধ্যে ক্রেতা তৈরী করা আছে।',
+        'phone.max' => 'ফোন নম্বর ২০ অক্ষরের বেশি হতে পারবে না।',
+        'password.confirmed' => 'পাসওয়ার্ড নিশ্চিতকরণ মেলেনি।',
+        'role.in' => 'নির্বাচিত ভূমিকা বৈধ নয়।',
+        'customer_type.in' => 'গ্রাহকের ধরন বৈধ নয়।',
+    ]);
 
-        $validated['role'] = $validated['role'] ?? 'customer'; // Default to 'customer' if not provided
+    $validated['role'] = $validated['role'] ?? 'customer';
 
-        $user = User::create($validated);
+    $user = User::create($validated);
 
-        return response()->json($user, 201);
-    }
+    return response()->json($user, 201);
+}
+
 
     public function update(Request $request, User $user)
     {

@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
             $table->string('ISBN')->nullable();
             $table->text('description')->nullable();
             $table->string('photo')->nullable();
+            $table->string('barcode')->nullable()->unique();
             $table->timestamps();
         });
     }

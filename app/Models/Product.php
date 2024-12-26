@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -17,6 +18,7 @@ class Product extends Model
         'ISBN',
         'description',
         'photo',
+        'barcode',
     ];
 
     protected $with = ['categories', 'authors'];
@@ -49,5 +51,16 @@ class Product extends Model
         return Attribute::make(
             get: fn ($value) => $value ?? 'https://via.placeholder.com/300x400/0284c7?text=No+Photo',
         );
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($product) {
+            do {
+                $barcode = 'P' . strtoupper(Str::random(8));
+            } while (Product::where('barcode', $barcode)->exists());
+
+            $product->barcode = $barcode;
+        });
     }
 }
