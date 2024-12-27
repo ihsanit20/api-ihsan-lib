@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
-use Milon\Barcode\DNS1D;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])->get();
-        return response()->json($products);
+        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])->latest()->get();
+        return ProductResource::collection($products);
     }
 
     public function search(Request $request)
@@ -31,7 +31,7 @@ class ProductController extends Controller
             })
             ->get();
 
-        return response()->json($products);
+        return ProductResource::collection($products);
     }
 
     public function find(Request $request)
@@ -48,7 +48,7 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     public function store(Request $request)
@@ -89,15 +89,8 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-
-        $barcodeGenerator = new DNS1D();
-        $barcodeImage = 'data:image/png;base64,' . $barcodeGenerator->getBarcodePNG($product->barcode, 'C128', 2, 50);
-
-        return response()->json([
-            'product' => $product,
-            'barcodeImage' => $barcodeImage,
-        ]);
+        $product = Product::with(['categories', 'authors'])->findOrFail($id);
+        return new ProductResource($product);
     }
 
     public function update(Request $request, $id)

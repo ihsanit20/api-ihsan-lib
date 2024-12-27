@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Milon\Barcode\DNS1D;
 
 class Product extends Model
 {
@@ -20,8 +21,6 @@ class Product extends Model
         'photo',
         'barcode',
     ];
-
-    protected $with = ['categories', 'authors'];
 
     public function categories()
     {
@@ -49,7 +48,14 @@ class Product extends Model
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ?? 'https://via.placeholder.com/300x400/0284c7?text=No+Photo',
+            get: fn ($value) => $value ?: 'https://via.placeholder.com/300x400/0284c7?text=No+Photo',
+        );
+    }
+
+    protected function availableStock(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->stocks()->sum('quantity') - $this->orderDetails()->sum('quantity'),
         );
     }
 
@@ -63,4 +69,13 @@ class Product extends Model
             $product->barcode = $barcode;
         });
     }
+
+    protected function barcodeImage(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->barcode ?
+                (new DNS1D())->getBarcodePNG($this->barcode, 'C128', 2, 50) : null
+        );
+    }
+
 }
