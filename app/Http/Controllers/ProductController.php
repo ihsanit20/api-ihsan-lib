@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
+use Milon\Barcode\DNS1D;
 
 class ProductController extends Controller
 {
@@ -88,8 +89,16 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['categories', 'authors'])->findOrFail($id);
-        return response()->json($product);
+        $product = Product::findOrFail($id);
+
+        $barcodeGenerator = new DNS1D();
+        
+        $barcodeImage = 'data:image/png;base64,' . $barcodeGenerator->getBarcodePNG($product->barcode, 'C39', 2, 60);
+
+        return response()->json([
+            'product' => $product,
+            'barcodeImage' => $barcodeImage,
+        ]);
     }
 
     public function update(Request $request, $id)
