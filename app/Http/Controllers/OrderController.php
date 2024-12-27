@@ -89,7 +89,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with('orderDetails.product', 'payments')->findOrFail($id);
+        $order = Order::with('user:id,name,phone,address', 'orderDetails.product', 'payments')->findOrFail($id);
         return response()->json($order);
     }
 

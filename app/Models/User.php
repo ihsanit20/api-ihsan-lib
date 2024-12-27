@@ -29,4 +29,12 @@ class User extends Authenticatable
         'role' => 'string',
         'customer_type' => 'string',
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    
+
 }
