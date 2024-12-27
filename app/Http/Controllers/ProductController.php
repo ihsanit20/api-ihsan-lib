@@ -92,8 +92,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $barcodeGenerator = new DNS1D();
-        
-        $barcodeImage = 'data:image/png;base64,' . $barcodeGenerator->getBarcodePNG($product->barcode, 'C39', 2, 60);
+        $barcodeImage = 'data:image/png;base64,' . $barcodeGenerator->getBarcodePNG($product->barcode, 'C128', 2, 50);
 
         return response()->json([
             'product' => $product,
