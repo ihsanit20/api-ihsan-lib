@@ -52,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(['role:staff,admin,developer'])->group(function () {
         Route::get('/payments', [PaymentController::class, 'index']);
+        Route::post('/collect-due', [PaymentController::class, 'collectDue']);
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::put('/orders/{id}/status', [OrderController::class, 'update']);
