@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -39,8 +40,9 @@ Route::get('/stocks/{id}', [StockController::class, 'show']);
 Route::get('/available-stocks', [StockController::class, 'getAvailableStocks']);
 Route::get('/available-stock/{productId}', [StockController::class, 'getAvailableStockByProductId']);
 
-
 Route::get('/user-search', [UserController::class, 'searchUser']);
+
+Route::get('/galleries', [GalleryController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -90,10 +92,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
 
         Route::delete('/stocks/{id}', [StockController::class, 'destroy']);
+
+        Route::post('/galleries', [GalleryController::class, 'uploadPhoto']);
+        Route::delete('/galleries/{id}', [GalleryController::class, 'destroy']);
+        Route::patch('/galleries/{id}/link', [GalleryController::class, 'updateLink']);
+        
     });
 
-    Route::middleware(['role:developer'])->group(function () {
-
-    });
-
+    Route::middleware(['role:developer'])->group(function () {});
 });
