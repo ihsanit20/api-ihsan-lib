@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
 
 class GalleryController extends Controller
 {
@@ -17,13 +18,19 @@ class GalleryController extends Controller
     public function uploadPhoto(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|max:2048',
+            'photo' => 'required|image|max:6144',
         ]);
 
-        $path = $request->file('photo')->store('gallery', 's3');
+        $image = Image::read($request->file('photo'));
+        $image->cover(1280, 540);
+
+        $path = 'gallery/' . uniqid() . '.webp';
+
+        Storage::disk('s3')->put($path, $image->toWebp(70));
+
+        $s3Url = Storage::disk('s3')->url($path);
 
         $gallery = new Gallery();
-        $s3Url = Storage::disk('s3')->url($path);
         $gallery->photo = $s3Url;
         $gallery->save();
 
