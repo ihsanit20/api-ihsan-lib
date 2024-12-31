@@ -22,7 +22,7 @@ class GalleryController extends Controller
         ]);
 
         $image = Image::read($request->file('photo'));
-        $image->cover(1280, 540);
+        $image->cover(1280, 320);
 
         $path = 'gallery/' . uniqid() . '.webp';
 
