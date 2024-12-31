@@ -39,9 +39,6 @@
         <div class="flex-grow pb-16 md:pb-0">
             {{ $slot }}
         </div>
-        <div class="fixed md:hidden bottom-0 z-50 block w-full print:hidden">
-            <x-bottombar />
-        </div>
         <div class="hidden md:block print:hidden">
              <x-footer-bottom />
         </div>

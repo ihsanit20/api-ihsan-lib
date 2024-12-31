@@ -27,9 +27,6 @@
 </head>
 
 <body class="bg-gray-100 flex min-h-screen flex-col justify-between overflow-y-scroll scrollbar">
-    <div class="print:hidden">
-        <x-header-top />
-    </div>
     <div class="sticky top-0 z-50 print:hidden">
         <x-header-main />
     </div>
@@ -37,7 +34,6 @@
         {{ $slot }}
     </div>
     <div class="print:hidden">
-        <x-footer-main />
         <x-footer-bottom />
     </div>
 </body>

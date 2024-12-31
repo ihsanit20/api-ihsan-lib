@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\TenantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,9 +28,10 @@ Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 Route::middleware('auth:admin')->group(function () {
-    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-    Route::post('/clients/create', [ClientController::class, 'store'])->name('clients.store');
-    Route::put('/clients/update/{id}', [ClientController::class, 'update'])->name('clients.update');
-    Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy'])->name('clients.destroy');
-    Route::post('/clients/migrate/{id}', [ClientController::class, 'migrate'])->name('clients.migrate');
+    Route::get('/admin/tenants', [TenantController::class, 'index'])->name('admin.tenants.index');
+    Route::get('/admin/tenants/create', [TenantController::class, 'create'])->name('admin.tenants.create');
+    Route::post('/admin/tenants', [TenantController::class, 'store'])->name('admin.tenants.store');
+    Route::get('/admin/tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('admin.tenants.edit');
+    Route::put('/admin/tenants/{tenant}', [TenantController::class, 'update'])->name('admin.tenants.update');
+    Route::delete('/admin/tenants/{tenant}', [TenantController::class, 'destroy'])->name('admin.tenants.destroy');
 });
