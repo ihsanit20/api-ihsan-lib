@@ -33,7 +33,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
-            return redirect()->route('clients.index')->with('success', 'Welcome to Client Management!');
+            return redirect()->route('admin.tenants.index')->with('success', 'Welcome to Client Management!');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);
