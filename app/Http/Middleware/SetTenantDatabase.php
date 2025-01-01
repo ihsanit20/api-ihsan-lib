@@ -12,6 +12,7 @@ class SetTenantDatabase
     public function handle(Request $request, Closure $next)
     {
         $domain = $request->getHost();
+        // dd($domain);
         $tenant = Tenant::where('domain', $domain)->first();
 
         if (!$tenant) {
