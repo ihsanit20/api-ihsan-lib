@@ -1,0 +1,118 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-DF7AO_Xo.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/fontAwesome5Pro.css": {
+    "file": "assets/fontAwesome5Pro-Cpo4IV4t.css",
+    "src": "resources/css/fontAwesome5Pro.css",
+    "isEntry": true
+  },
+  "resources/fonts/fa-brands-400.eot": {
+    "file": "assets/fa-brands-400-DLm6CimS.eot",
+    "src": "resources/fonts/fa-brands-400.eot"
+  },
+  "resources/fonts/fa-brands-400.svg": {
+    "file": "assets/fa-brands-400-DZUQnDoV.svg",
+    "src": "resources/fonts/fa-brands-400.svg"
+  },
+  "resources/fonts/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-Dn0asMWc.ttf",
+    "src": "resources/fonts/fa-brands-400.ttf"
+  },
+  "resources/fonts/fa-brands-400.woff": {
+    "file": "assets/fa-brands-400-YwP_5WQP.woff",
+    "src": "resources/fonts/fa-brands-400.woff"
+  },
+  "resources/fonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-Ct5XyPwH.woff2",
+    "src": "resources/fonts/fa-brands-400.woff2"
+  },
+  "resources/fonts/fa-duotone-900.eot": {
+    "file": "assets/fa-duotone-900-BLhsa5g-.eot",
+    "src": "resources/fonts/fa-duotone-900.eot"
+  },
+  "resources/fonts/fa-duotone-900.svg": {
+    "file": "assets/fa-duotone-900-LaAJepCk.svg",
+    "src": "resources/fonts/fa-duotone-900.svg"
+  },
+  "resources/fonts/fa-duotone-900.ttf": {
+    "file": "assets/fa-duotone-900-5IT0mtbs.ttf",
+    "src": "resources/fonts/fa-duotone-900.ttf"
+  },
+  "resources/fonts/fa-duotone-900.woff": {
+    "file": "assets/fa-duotone-900-BIdwoctB.woff",
+    "src": "resources/fonts/fa-duotone-900.woff"
+  },
+  "resources/fonts/fa-duotone-900.woff2": {
+    "file": "assets/fa-duotone-900-C-6MI5r6.woff2",
+    "src": "resources/fonts/fa-duotone-900.woff2"
+  },
+  "resources/fonts/fa-light-300.eot": {
+    "file": "assets/fa-light-300-Bs29hmKY.eot",
+    "src": "resources/fonts/fa-light-300.eot"
+  },
+  "resources/fonts/fa-light-300.svg": {
+    "file": "assets/fa-light-300-BPMMci4V.svg",
+    "src": "resources/fonts/fa-light-300.svg"
+  },
+  "resources/fonts/fa-light-300.ttf": {
+    "file": "assets/fa-light-300-Bbe6cx1f.ttf",
+    "src": "resources/fonts/fa-light-300.ttf"
+  },
+  "resources/fonts/fa-light-300.woff": {
+    "file": "assets/fa-light-300-Clh158h4.woff",
+    "src": "resources/fonts/fa-light-300.woff"
+  },
+  "resources/fonts/fa-light-300.woff2": {
+    "file": "assets/fa-light-300-BKx7LEuW.woff2",
+    "src": "resources/fonts/fa-light-300.woff2"
+  },
+  "resources/fonts/fa-regular-400.eot": {
+    "file": "assets/fa-regular-400-CGhDHR0t.eot",
+    "src": "resources/fonts/fa-regular-400.eot"
+  },
+  "resources/fonts/fa-regular-400.svg": {
+    "file": "assets/fa-regular-400-uGOQHyIm.svg",
+    "src": "resources/fonts/fa-regular-400.svg"
+  },
+  "resources/fonts/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-C4_l2KSB.ttf",
+    "src": "resources/fonts/fa-regular-400.ttf"
+  },
+  "resources/fonts/fa-regular-400.woff": {
+    "file": "assets/fa-regular-400-CjwWUObw.woff",
+    "src": "resources/fonts/fa-regular-400.woff"
+  },
+  "resources/fonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-DzNpgy4J.woff2",
+    "src": "resources/fonts/fa-regular-400.woff2"
+  },
+  "resources/fonts/fa-solid-900.eot": {
+    "file": "assets/fa-solid-900-4ocI5UA7.eot",
+    "src": "resources/fonts/fa-solid-900.eot"
+  },
+  "resources/fonts/fa-solid-900.svg": {
+    "file": "assets/fa-solid-900-B_CaAUfQ.svg",
+    "src": "resources/fonts/fa-solid-900.svg"
+  },
+  "resources/fonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-D3p2jeUc.ttf",
+    "src": "resources/fonts/fa-solid-900.ttf"
+  },
+  "resources/fonts/fa-solid-900.woff": {
+    "file": "assets/fa-solid-900-BqaEFZk3.woff",
+    "src": "resources/fonts/fa-solid-900.woff"
+  },
+  "resources/fonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-D15M1yo0.woff2",
+    "src": "resources/fonts/fa-solid-900.woff2"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-Xaw6OIO1.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
