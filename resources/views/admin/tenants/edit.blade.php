@@ -9,10 +9,6 @@
                 <input type="text" name="name" id="name" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->name }}" required>
             </div>
             <div class="mb-4">
-                <label for="username" class="block text-gray-700">Username</label>
-                <input type="text" name="username" id="username" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->username }}" required>
-            </div>
-            <div class="mb-4">
                 <label for="database" class="block text-gray-700">Database</label>
                 <input type="text" name="database" id="database" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->database }}" required>
             </div>
