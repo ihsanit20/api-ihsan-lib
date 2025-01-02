@@ -11,13 +11,10 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('username');
             $table->string('database')->unique();
             $table->string('domain')->unique();
-            $table->string('host')->default('127.0.0.1');
-            $table->string('port')->default('3306');
-            $table->string('username');
-            $table->string('password');
-            $table->boolean('status')->default(1);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -27,3 +24,5 @@ class CreateTenantsTable extends Migration
         Schema::dropIfExists('tenants');
     }
 }
+
+

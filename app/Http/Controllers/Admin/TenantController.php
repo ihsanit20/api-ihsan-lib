@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
@@ -24,18 +25,35 @@ class TenantController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'database' => 'required|string|unique:tenants',
+            'username' => 'required|string|max:255',
             'domain' => 'required|string|unique:tenants',
-            'host' => 'required|string',
-            'port' => 'required|string',
-            'username' => 'required|string',
-            'password' => '',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        Tenant::create($request->all());
+        $databaseName = "{$request->username}_{$request->name}";
 
-        return redirect()->route('admin.tenants.index')->with('success', 'Tenant created successfully.');
+        if (Tenant::where('database', $databaseName)->exists()) {
+            return redirect()->back()->with('error', 'Database name already exists. Please use a different username or name.');
+        }
+
+        $tenant = Tenant::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'database' => $databaseName,
+            'domain' => $request->domain,
+            'status' => $request->status,
+        ]);
+
+        try {
+            DB::statement("CREATE DATABASE {$databaseName} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+        } catch (\Exception $e) {
+            $tenant->delete();
+            return redirect()->route('admin.tenants.index')->with('error', "Failed to create database. Error: {$e->getMessage()}");
+        }
+
+        return redirect()->route('admin.tenants.index')->with('success', 'Tenant and database created successfully.');
     }
+
 
     public function checkDatabase(Tenant $tenant)
     {
@@ -63,7 +81,6 @@ class TenantController extends Controller
         }
     }
 
-
     public function edit(Tenant $tenant)
     {
         return view('admin.tenants.edit', compact('tenant'));
@@ -75,21 +92,15 @@ class TenantController extends Controller
             'name' => 'required|string|max:255',
             'database' => 'required|string|unique:tenants,database,' . $tenant->id,
             'domain' => 'required|string|unique:tenants,domain,' . $tenant->id,
-            'host' => 'required|string',
-            'port' => 'required|string',
-            'username' => 'required|string',
-            'password' => '',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        $data = $request->only(['name', 'database', 'domain', 'host', 'port', 'username']);
-
-        $data['password'] = $request->password ?? '';
-
-        // if ($request->filled('password')) {
-        //     $data['password'] = bcrypt($request->password);
-        // }
-
-        $tenant->update($data);
+        $tenant->update([
+            'name' => $request->name,
+            'database' => $request->database,
+            'domain' => $request->domain,
+            'status' => $request->status,
+        ]);
 
         return redirect()->route('admin.tenants.index')->with('success', 'Tenant updated successfully.');
     }
@@ -99,4 +110,62 @@ class TenantController extends Controller
         $tenant->delete();
         return redirect()->route('admin.tenants.index')->with('success', 'Tenant deleted successfully.');
     }
+
+    public function runMigration(Tenant $tenant)
+    {
+        try {
+            config(['database.connections.tenant' => [
+                'driver'    => 'mysql',
+                'host'      => env('DB_HOST', '127.0.0.1'),
+                'port'      => env('DB_PORT', '3306'),
+                'database'  => $tenant->database,
+                'username'  => env('DB_USERNAME', 'forge'),
+                'password'  => env('DB_PASSWORD', ''),
+                'charset'   => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'prefix'    => '',
+                'strict'    => true,
+            ]]);
+
+            Artisan::call('migrate', [
+                '--path' => 'database/migrations/clients', // Path to tenant-specific migrations
+                '--database' => 'tenant', // Tenant connection name
+                '--force' => true, // Force migration without confirmation
+            ]);
+
+            return redirect()->route('admin.tenants.index')->with('success', "Migration ran successfully for tenant '{$tenant->name}'.");
+        } catch (\Exception $e) {
+            return redirect()->route('admin.tenants.index')->with('error', "Failed to run migration for tenant '{$tenant->name}'. Error: {$e->getMessage()}");
+        }
+    }
+
+    public function checkMigrationStatus(Tenant $tenant)
+    {
+        try {
+            config(['database.connections.tenant' => [
+                'driver'    => 'mysql',
+                'host'      => env('DB_HOST', '127.0.0.1'),
+                'port'      => env('DB_PORT', '3306'),
+                'database'  => $tenant->database,
+                'username'  => env('DB_USERNAME', 'forge'),
+                'password'  => env('DB_PASSWORD', ''),
+                'charset'   => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'prefix'    => '',
+                'strict'    => true,
+            ]]);
+
+            Artisan::call('migrate:status', [
+                '--database' => 'tenant', // Tenant connection name
+                '--path' => 'database/migrations/clients', 
+            ]);
+
+            $migrationStatus = Artisan::output();
+
+            return redirect()->route('admin.tenants.index')->with('success', nl2br($migrationStatus));
+        } catch (\Exception $e) {
+            return redirect()->route('admin.tenants.index')->with('error', "Failed to check migration status for tenant '{$tenant->name}'. Error: {$e->getMessage()}");
+        }
+    }
+
 }
