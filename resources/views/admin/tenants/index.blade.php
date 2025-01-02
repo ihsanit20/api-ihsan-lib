@@ -1,9 +1,22 @@
 <x-guest>
     <div class="mx-auto my-8 max-w-7xl px-4">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-700 rounded shadow">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 p-4 bg-red-100 text-red-700 rounded shadow">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">Tenants</h1>
             <a href="{{ route('admin.tenants.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Tenant</a>
         </div>
+
         <table class="w-full bg-white shadow rounded-md overflow-hidden border">
             <thead>
                 <tr class="bg-gray-200">
@@ -21,7 +34,7 @@
                     <td class="p-2 border text-center">{{ $tenant->database }}</td>
                     <td class="p-2 border text-center">{{ $tenant->domain }}</td>
                     <td class="p-2 border text-center">{{ $tenant->status ? 'Active' : 'Inactive' }}</td>
-                    <td class="p-2 border ">
+                    <td class="p-2 border">
                         <div class="flex justify-center gap-4">
                             <a href="{{ route('admin.tenants.edit', $tenant) }}" class="btn-icon">
                                 <i class="fad fa-edit"></i>
@@ -33,6 +46,9 @@
                                     <i class="fad fa-trash text-red-500"></i>
                                 </button>
                             </form>
+                            <a href="{{ route('admin.tenants.check', $tenant) }}" class="btn-icon text-green-500">
+                                <i class="fad fa-database"></i>
+                            </a>
                         </div>
                     </td>
                 </tr>

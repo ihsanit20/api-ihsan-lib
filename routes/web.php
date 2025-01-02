@@ -34,4 +34,5 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('admin.tenants.edit');
     Route::put('/admin/tenants/{tenant}', [TenantController::class, 'update'])->name('admin.tenants.update');
     Route::delete('/admin/tenants/{tenant}', [TenantController::class, 'destroy'])->name('admin.tenants.destroy');
+    Route::get('/admin/tenants/check/{tenant}', [TenantController::class, 'checkDatabase'])->name('admin.tenants.check');
 });
