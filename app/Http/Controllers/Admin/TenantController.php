@@ -43,14 +43,16 @@ class TenantController extends Controller
 
         try {
             config(['database.connections.tenant_check' => [
-                'driver' => 'mysql',
-                'host' => $tenant->host,
-                'port' => $tenant->port,
-                'database' => $tenant->database,
-                'username' => $tenant->username,
-                'password' => $tenant->password,
-                'charset' => 'utf8mb4',
+                'driver'    => 'mysql',
+                'host' => env('DB_HOST', '127.0.0.1'),
+                'port' => env('DB_PORT', '3306'),
+                'username' => env('DB_USERNAME', 'forge'),
+                'password' => env('DB_PASSWORD', ''),
+                'database'  => $tenant->database,
+                'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
+                'prefix'    => '',
+                'strict'    => true,
             ]]);
 
             DB::connection('tenant_check')->getPdo();

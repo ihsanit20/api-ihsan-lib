@@ -11,8 +11,9 @@ class SetTenantDatabase
 {
     public function handle(Request $request, Closure $next)
     {
-        $domain = $request->getHost();
-        // dd($domain);
+        // return
+        $domain = $this->getClientDomainFromRequest($request);
+
         $tenant = Tenant::where('domain', $domain)->first();
 
         if (!$tenant) {
@@ -22,11 +23,11 @@ class SetTenantDatabase
         config([
             'database.connections.tenant' => [
                 'driver'    => 'mysql',
-                'host'      => $tenant->host,
-                'port'      => $tenant->port,
+                'host' => env('DB_HOST', '127.0.0.1'),
+                'port' => env('DB_PORT', '3306'),
+                'username' => env('DB_USERNAME', 'forge'),
+                'password' => env('DB_PASSWORD', ''),
                 'database'  => $tenant->database,
-                'username'  => $tenant->username,
-                'password'  => $tenant->password ?? '',
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => '',
@@ -37,5 +38,19 @@ class SetTenantDatabase
         DB::setDefaultConnection('tenant');
 
         return $next($request);
+    }
+
+    protected function getClientDomainFromRequest($request)
+    {
+        $origin = $request->header('Origin'); // For CORS requests
+        $referer = $request->header('Referer'); // Standard Referer header
+
+        // Use the one that is available or fits your use case
+        $domain = $origin ?? $referer;
+
+        // Remove http://, https://, www., and trailing slashes
+        $domain = rtrim(preg_replace('/^http(|s)\:\/\/(www\.|)|www./','', $domain ), '/');
+
+        return $domain;
     }
 }
