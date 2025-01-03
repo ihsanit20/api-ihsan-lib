@@ -26,19 +26,22 @@ class TenantController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'domain' => 'required|string|unique:tenants',
+            'database' => 'required|string|unique:tenants',
+            'host' => 'required|string',
+            'port' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
             'status' => 'required|in:active,inactive',
         ]);
 
-        $databaseName = "{$request->name}";
-
-        if (Tenant::where('database', $databaseName)->exists()) {
-            return redirect()->back()->with('error', 'Database name already exists. Please use a different name.');
-        }
-
         Tenant::create([
             'name' => $request->name,
-            'database' => $databaseName,
             'domain' => $request->domain,
+            'database' => $request->database,
+            'host' => $request->host,
+            'port' => $request->port,
+            'username' => $request->username,
+            'password' => $request->password,
             'status' => $request->status,
         ]);
 
@@ -54,15 +57,23 @@ class TenantController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'database' => 'required|string|unique:tenants,database,' . $tenant->id,
             'domain' => 'required|string|unique:tenants,domain,' . $tenant->id,
+            'database' => 'required|string|unique:tenants,database,' . $tenant->id,
+            'host' => 'required|string',
+            'port' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
             'status' => 'required|in:active,inactive',
         ]);
 
         $tenant->update([
             'name' => $request->name,
-            'database' => $request->database,
             'domain' => $request->domain,
+            'database' => $request->database,
+            'host' => $request->host,
+            'port' => $request->port,
+            'username' => $request->username,
+            'password' => $request->password,
             'status' => $request->status,
         ]);
 
@@ -77,23 +88,21 @@ class TenantController extends Controller
 
     public function checkDatabase(Tenant $tenant)
     {
-
         try {
-            config(['database.connections.tenant_check' => [
+            config(['database.connections.tenant' => [
                 'driver'    => 'mysql',
-                'host'      => env('DB_HOST', '127.0.0.1'),
-                'port'      => env('DB_PORT', '3306'),
-                'username'  => env('DB_USERNAME'),
-                'password'  => env('DB_PASSWORD'),
+                'host'      => $tenant->host,
+                'port'      => $tenant->port,
                 'database'  => $tenant->database,
+                'username'  => $tenant->username,
+                'password'  => $tenant->password,
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => '',
                 'strict'    => true,
             ]]);
 
-
-            DB::connection('tenant_check')->getPdo();
+            DB::connection('tenant')->getPdo();
 
             return redirect()->route('admin.tenants.index')->with('success', "Database '{$tenant->database}' exists and is accessible.");
         } catch (\Exception $e) {
@@ -104,18 +113,21 @@ class TenantController extends Controller
     public function runMigration(Tenant $tenant)
     {
         try {
-            config(['database.connections.tenant_check' => [
+            config(['database.connections.tenant' => [
                 'driver'    => 'mysql',
-                'host'      => env('DB_HOST', '127.0.0.1'),
-                'port'      => env('DB_PORT', '3306'),
-                'username'  => env('DB_USERNAME'),
-                'password'  => env('DB_PASSWORD'),
+                'host'      => $tenant->host,
+                'port'      => $tenant->port,
                 'database'  => $tenant->database,
+                'username'  => $tenant->username,
+                'password'  => $tenant->password,
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => '',
                 'strict'    => true,
             ]]);
+
+            DB::purge('tenant');
+            DB::setDefaultConnection('tenant');
 
             Artisan::call('migrate', [
                 '--path' => 'database/migrations/clients',
@@ -134,19 +146,22 @@ class TenantController extends Controller
         try {
             config(['database.connections.tenant' => [
                 'driver'    => 'mysql',
-                'host'      => env('DB_HOST', '127.0.0.1'),
-                'port'      => env('DB_PORT', '3306'),
+                'host'      => $tenant->host,
+                'port'      => $tenant->port,
                 'database'  => $tenant->database,
-                'username'  => env('DB_USERNAME', 'forge'),
-                'password'  => env('DB_PASSWORD', ''),
+                'username'  => $tenant->username,
+                'password'  => $tenant->password,
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => '',
                 'strict'    => true,
             ]]);
 
+            DB::purge('tenant');
+            DB::setDefaultConnection('tenant');
+
             Artisan::call('migrate:status', [
-                '--database' => 'tenant', // Tenant connection name
+                '--database' => 'tenant',
                 '--path' => 'database/migrations/clients',
             ]);
 
@@ -157,5 +172,4 @@ class TenantController extends Controller
             return redirect()->route('admin.tenants.index')->with('error', "Failed to check migration status for tenant '{$tenant->name}'. Error: {$e->getMessage()}");
         }
     }
-
 }

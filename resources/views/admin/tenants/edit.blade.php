@@ -17,6 +17,22 @@
                 <input type="text" name="domain" id="domain" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->domain }}" required>
             </div>
             <div class="mb-4">
+                <label for="host" class="block text-gray-700">Host</label>
+                <input type="text" name="host" id="host" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->host }}" required>
+            </div>
+            <div class="mb-4">
+                <label for="port" class="block text-gray-700">Port</label>
+                <input type="text" name="port" id="port" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->port }}" required>
+            </div>
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700">Username</label>
+                <input type="text" name="username" id="username" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->username }}" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700">Password</label>
+                <input type="password" name="password" id="password" class="w-full border-gray-300 rounded p-2" value="{{ $tenant->password }}" required>
+            </div>
+            <div class="mb-4">
                 <label for="status" class="block text-gray-700">Status</label>
                 <select name="status" id="status" class="w-full border-gray-300 rounded p-2">
                     <option value="active" {{ $tenant->status === 'active' ? 'selected' : '' }}>Active</option>
