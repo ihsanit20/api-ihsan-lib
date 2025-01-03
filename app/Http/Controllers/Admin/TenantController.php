@@ -77,6 +77,7 @@ class TenantController extends Controller
 
     public function checkDatabase(Tenant $tenant)
     {
+
         try {
             config(['database.connections.tenant_check' => [
                 'driver'    => 'mysql',
@@ -90,6 +91,7 @@ class TenantController extends Controller
                 'prefix'    => '',
                 'strict'    => true,
             ]]);
+
 
             DB::connection('tenant_check')->getPdo();
 
