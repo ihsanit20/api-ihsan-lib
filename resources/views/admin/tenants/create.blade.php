@@ -17,11 +17,11 @@
             </div>
             <div class="mb-4">
                 <label for="host" class="block text-gray-700">Host</label>
-                <input type="text" name="host" id="host" class="w-full border-gray-300 rounded p-2" value="127.0.0.1" required>
+                <input type="text" name="host" id="host" class="w-full border-gray-300 rounded p-2" value="{{ old('host', '127.0.0.1') }}" required>
             </div>
             <div class="mb-4">
                 <label for="port" class="block text-gray-700">Port</label>
-                <input type="text" name="port" id="port" class="w-full border-gray-300 rounded p-2" value="3306" required>
+                <input type="text" name="port" id="port" class="w-full border-gray-300 rounded p-2" value="{{ old('port', '3306') }}" required>
             </div>
             <div class="mb-4">
                 <label for="username" class="block text-gray-700">Username</label>
