@@ -40,7 +40,7 @@ class TenantController extends Controller
             'database' => $request->database,
             'host' => $request->host,
             'port' => $request->port,
-            'username' => $request->username,
+            'username' => $request->username, // Ensure this is provided
             'password' => $request->password,
             'status' => $request->status,
         ]);
