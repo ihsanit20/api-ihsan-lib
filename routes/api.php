@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -17,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/company-info', [CompanyInfoController::class, 'index']);
+Route::put('/company-info', [CompanyInfoController::class, 'update']);
+Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -96,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/galleries', [GalleryController::class, 'uploadPhoto']);
         Route::delete('/galleries/{id}', [GalleryController::class, 'destroy']);
         Route::patch('/galleries/{id}/link', [GalleryController::class, 'updateLink']);
-        
+
     });
 
     Route::middleware(['role:developer'])->group(function () {});

@@ -29,7 +29,7 @@
             </div>
             <div class="mb-4">
                 <label for="password" class="block text-gray-700">Password</label>
-                <input type="password" name="password" id="password" class="w-full border-gray-300 rounded p-2" required>
+                <input type="password" name="password" id="password" class="w-full border-gray-300 rounded p-2" >
             </div>
             <div class="mb-4">
                 <label for="status" class="block text-gray-700">Status</label>

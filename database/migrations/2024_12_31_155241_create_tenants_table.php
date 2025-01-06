@@ -16,7 +16,7 @@ class CreateTenantsTable extends Migration
             $table->string('host')->default('127.0.0.1');
             $table->string('port')->default('3306');
             $table->string('username');
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
@@ -27,5 +27,3 @@ class CreateTenantsTable extends Migration
         Schema::dropIfExists('tenants');
     }
 }
-
-

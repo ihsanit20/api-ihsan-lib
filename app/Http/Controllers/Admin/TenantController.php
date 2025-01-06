@@ -30,7 +30,7 @@ class TenantController extends Controller
             'host' => 'required|string',
             'port' => 'required|string',
             'username' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -62,7 +62,7 @@ class TenantController extends Controller
             'host' => 'required|string',
             'port' => 'required|string',
             'username' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
 
