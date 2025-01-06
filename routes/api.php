@@ -20,8 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/company-info', [CompanyInfoController::class, 'index']);
-Route::put('/company-info', [CompanyInfoController::class, 'update']);
-Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -48,6 +46,8 @@ Route::get('/available-stock/{productId}', [StockController::class, 'getAvailabl
 Route::get('/user-search', [UserController::class, 'searchUser']);
 
 Route::get('/galleries', [GalleryController::class, 'index']);
+
+Route::get('/random-products', [ProductController::class, 'randomProducts']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -101,6 +101,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/galleries', [GalleryController::class, 'uploadPhoto']);
         Route::delete('/galleries/{id}', [GalleryController::class, 'destroy']);
         Route::patch('/galleries/{id}/link', [GalleryController::class, 'updateLink']);
+
+        Route::put('/company-info', [CompanyInfoController::class, 'update']);
+        Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
 
     });
 

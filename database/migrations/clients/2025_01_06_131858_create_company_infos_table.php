@@ -34,7 +34,7 @@ class CreateCompanyInfosTable extends Migration
             'yt_link' => 'https://youtube.com',
             'x_link' => 'https://x.com',
             'in_link' => 'https://linkedin.com',
-            'logo' => null,
+            'logo' => 'https://placehold.co/200x100/0284c7/white?text=IhsanIT',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

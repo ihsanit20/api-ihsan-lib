@@ -16,6 +16,17 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
+    public function randomProducts()
+    {
+        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
+            ->inRandomOrder() 
+            ->take(8)
+            ->get();
+
+        return ProductResource::collection($products);
+    }
+
+
     public function search(Request $request)
     {
         $query = $request->get('query', '');

@@ -48,11 +48,13 @@ class CompanyInfoController extends Controller
             'logo' => 'required|image|max:2048',
         ]);
 
-        $image = Image::read($request->file('photo'));
+        $image = Image::read($request->file('logo'));
         $image->cover(200, 100);
 
-        $logoPath = $request->file('logo')->store('logos', 's3');
-        $url = Storage::disk('s3')->url($logoPath, $image->toWebp(100));
+        $path = 'logos/' . uniqid() . '.webp';
+        Storage::disk('s3')->put($path, $image->toWebp(100));
+
+        $url = Storage::disk('s3')->url($path);
 
         $companyInfo = CompanyInfo::first();
         if (!$companyInfo) {
@@ -66,4 +68,5 @@ class CompanyInfoController extends Controller
             'url' => $url
         ], 200);
     }
+
 }
