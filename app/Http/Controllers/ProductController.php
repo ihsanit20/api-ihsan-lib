@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function randomProducts()
     {
         $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
-            ->inRandomOrder() 
+            ->inRandomOrder()
             ->take(8)
             ->get();
 
@@ -167,7 +167,7 @@ class ProductController extends Controller
         $image = Image::read($request->file('photo'));
         $image->cover(300, 400);
 
-        $path = 'product/photos/' . $product->id . '.webp';
+        $path = $this->getS3Prefix($request) . '/products/' . $product->id . '.webp';
 
         Storage::disk('s3')->put($path, $image->toWebp(100));
 

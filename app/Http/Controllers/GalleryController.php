@@ -24,7 +24,7 @@ class GalleryController extends Controller
         $image = Image::read($request->file('photo'));
         $image->cover(1280, 320);
 
-        $path = 'gallery/' . uniqid() . '.webp';
+        $path = $this->getS3Prefix($request) . '/gallery/' . uniqid() . '.webp';
 
         Storage::disk('s3')->put($path, $image->toWebp(70));
 

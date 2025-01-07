@@ -5,16 +5,18 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Tenant;
 
 class SetTenantDatabase
 {
     public function handle(Request $request, Closure $next)
     {
-        // return
         $domain = $this->getClientDomainFromRequest($request);
 
-        $tenant = Tenant::where('domain', $domain)->first();
+        $tenant = Cache::remember("tenant_{$domain}", now()->addMinutes(10), function () use ($domain) {
+            return Tenant::where('domain', $domain)->first();
+        });
 
         if (!$tenant) {
             abort(404, 'Tenant not found');
@@ -42,15 +44,10 @@ class SetTenantDatabase
 
     protected function getClientDomainFromRequest($request)
     {
-        $origin = $request->header('Origin'); // For CORS requests
-        $referer = $request->header('Referer'); // Standard Referer header
-
-        // Use the one that is available or fits your use case
+        $origin = $request->header('Origin');
+        $referer = $request->header('Referer');
         $domain = $origin ?? $referer;
 
-        // Remove http://, https://, www., and trailing slashes
-        $domain = rtrim(preg_replace('/^http(|s)\:\/\/(www\.|)|www./','', $domain ), '/');
-
-        return $domain;
+        return rtrim(preg_replace('/^http(|s):\/\/(www\.|)|www\./', '', $domain), '/');
     }
 }

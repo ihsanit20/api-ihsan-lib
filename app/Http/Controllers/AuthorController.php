@@ -69,7 +69,7 @@ class AuthorController extends Controller
 
         $image->cover(200, 200);
 
-        $path = 'author/photos/' . $author->id . '.webp';
+        $path = $this->getS3Prefix($request) . '/authors/' . $author->id . '.webp';
 
         Storage::disk('s3')->put($path, $image->toWebp(100));
 

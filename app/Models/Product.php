@@ -48,7 +48,7 @@ class Product extends Model
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ?: 'https://via.placeholder.com/300x400/0284c7?text=No+Photo',
+            get: fn ($value) => $value ?: 'https://placehold.co/300x400/0284c7/fff?text=No+Photo',
         );
     }
 

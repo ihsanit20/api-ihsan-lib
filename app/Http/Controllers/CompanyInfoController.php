@@ -51,7 +51,8 @@ class CompanyInfoController extends Controller
         $image = Image::read($request->file('logo'));
         $image->cover(200, 100);
 
-        $path = 'logos/' . uniqid() . '.webp';
+        $path = $this->getS3Prefix($request) . '/logo.webp';
+
         Storage::disk('s3')->put($path, $image->toWebp(100));
 
         $url = Storage::disk('s3')->url($path);

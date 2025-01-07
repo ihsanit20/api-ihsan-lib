@@ -2,7 +2,7 @@
     <div class="bg-white py-2 shadow">
         <div class="container mx-auto flex justify-between items-center px-4">
 
-            <div class="w-16 md:w-24">
+            <div class="w-24 md:w-44">
                 <a href="/">
                     <x-application-logo />
                 </a>

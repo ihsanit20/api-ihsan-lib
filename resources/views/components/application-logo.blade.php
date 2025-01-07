@@ -1,5 +1,5 @@
 <div>
-    <img src="{{ asset('/img/logo.png') }}" alt=""/>
+    <img src="{{ asset('/img/ihsan-logo.png') }}" alt=""/>
 </div>
 
 
