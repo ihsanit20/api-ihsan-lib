@@ -22,6 +22,11 @@ class Product extends Model
         'barcode',
     ];
 
+    protected $casts = [
+        'mrp' => 'int',
+        'selling_price' => 'int',
+    ];
+
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_categories')
