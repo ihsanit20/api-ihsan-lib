@@ -16,11 +16,31 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
+    public function filter(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->has('category_id')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category_id); // Explicit table name added
+            });
+        }
+
+        if ($request->has('author_id')) {
+            $query->whereHas('authors', function ($q) use ($request) {
+                $q->where('authors.id', $request->author_id); // Explicit table name added
+            });
+        }
+
+        $products = $query->with(['categories:id,name', 'authors:id,name,photo'])->latest()->get();
+        return ProductResource::collection($products);
+    }
+
     public function randomProducts()
     {
         $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
             ->inRandomOrder()
-            ->take(8)
+            ->take(10)
             ->get();
 
         return ProductResource::collection($products);

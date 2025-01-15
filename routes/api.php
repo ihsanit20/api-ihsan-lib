@@ -29,6 +29,7 @@ Route::get('/products/search', [ProductController::class, 'search']);
 Route::get('/products/find', [ProductController::class, 'find']);
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/filter', [ProductController::class, 'filter']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 
