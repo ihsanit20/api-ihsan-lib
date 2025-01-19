@@ -12,7 +12,15 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])->latest()->get();
+        $products = Product::query()
+            ->with([
+                'publisher:id,name',
+                'categories:id,name',
+                'authors:id,name,photo',
+            ])
+            ->latest()
+            ->get();
+
         return ProductResource::collection($products);
     }
 
@@ -86,6 +94,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'publisher_id' => 'required|exists:publishers,id',
             'mrp' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'ISBN' => 'nullable|string',
@@ -99,6 +108,7 @@ class ProductController extends Controller
 
         $product = Product::create($request->only(
             'name',
+            'publisher_id',
             'ISBN',
             'description',
             'mrp',
@@ -128,6 +138,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
+            'publisher_id' => 'required|exists:publishers,id',
             'mrp' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'ISBN' => 'nullable|string',
@@ -142,6 +153,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($request->only(
             'name',
+            'publisher_id',
             'ISBN',
             'description',
             'mrp',

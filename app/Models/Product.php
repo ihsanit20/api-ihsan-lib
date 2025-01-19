@@ -20,12 +20,18 @@ class Product extends Model
         'description',
         'photo',
         'barcode',
+        'publisher_id',
     ];
 
     protected $casts = [
         'mrp' => 'int',
         'selling_price' => 'int',
     ];
+
+    public function publisher()
+    {
+        return $this->belongsTo(Publisher::class);
+    }
 
     public function categories()
     {

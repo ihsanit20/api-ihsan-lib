@@ -8,6 +8,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -32,6 +33,8 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/filter', [ProductController::class, 'filter']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
+Route::get('/publishers', [PublisherController::class, 'index']);
+Route::get('/publishers/{id}', [PublisherController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
@@ -77,6 +80,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/products/{id}', [ProductController::class, 'update']);
         Route::post('/products/{id}/photo', [ProductController::class, 'uploadPhoto']);
 
+        Route::post('/publishers', [PublisherController::class, 'store']);
+        Route::put('/publishers/{id}', [PublisherController::class, 'update']);
+        Route::post('/publishers/{id}/photo', [PublisherController::class, 'uploadPhoto']);
+
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
 
@@ -92,6 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
         Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+        
+        Route::delete('/publishers/{id}', [PublisherController::class, 'destroy']);
 
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
