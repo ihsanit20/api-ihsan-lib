@@ -15,7 +15,7 @@ class SetTenantDatabase
         $domain = $this->getClientDomainFromRequest($request);
 
         $tenant = Cache::remember("tenant_{$domain}", now()->addMinutes(10), function () use ($domain) {
-            return Tenant::where('domain', $domain)->first();
+            return Tenant::activeForDomain($domain)->first();
         });
 
         if (!$tenant) {

@@ -19,4 +19,29 @@ class Tenant extends Model
         'username',
         'password',
     ];
+
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+    
+    public function scopeDomain($query, $domain)
+    {
+        return $query->where('domain', $domain);
+    }
+    
+    public function scopeActive($query)
+    {
+        return $query->status('active');
+    }
+    
+    public function scopeInactive($query)
+    {
+        return $query->status('inactive');
+    }
+    
+    public function scopeActiveForDomain($query, $domain)
+    {
+        return $query->active()->domain($domain);
+    }    
 }

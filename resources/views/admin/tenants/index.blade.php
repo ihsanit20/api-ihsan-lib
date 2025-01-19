@@ -41,6 +41,7 @@
                                 <i class="fad fa-edit"></i>
                             </a>
                             <!-- Delete Tenant -->
+                            {{-- 
                             <form action="{{ route('admin.tenants.destroy', $tenant) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                 @csrf
                                 @method('DELETE')
@@ -48,6 +49,7 @@
                                     <i class="fad fa-trash text-red-500"></i>
                                 </button>
                             </form>
+                            --}}
                             <!-- Check Database -->
                             <a href="{{ route('admin.tenants.check', $tenant) }}" class="btn-icon text-green-500">
                                 <i class="fad fa-database"></i>
