@@ -44,7 +44,7 @@ class Publisher extends Model
     /**
      * Scope a query to only include other publishers.
      */
-    public function scopeOthers($query)
+    public function scopeOther($query)
     {
         return $query->where('is_own', false);
     }

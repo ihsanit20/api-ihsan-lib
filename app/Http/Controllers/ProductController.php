@@ -46,9 +46,19 @@ class ProductController extends Controller
 
     public function randomProducts()
     {
-        $products = Product::with(['categories:id,name', 'authors:id,name,photo'])
+        $products = Product::query()
+            ->with([
+                'categories:id,name',
+                'authors:id,name,photo'
+            ])
+            ->when(request()->publisher == 'own', function ($query) {
+                $query->whereHas('publisher', fn ($query) => $query->own());
+            })
+            ->when(request()->publisher == 'other', function ($query) {
+                $query->whereHas('publisher', fn ($query) => $query->other());
+            })
             ->inRandomOrder()
-            ->take(10)
+            ->take(request()->limit ?? 10)
             ->get();
 
         return ProductResource::collection($products);
