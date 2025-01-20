@@ -40,6 +40,10 @@ class ProductController extends Controller
             });
         }
 
+        if ($request->has('publisher_id')) {
+            $query->where('publisher_id', $request->publisher_id);
+        }
+
         $products = $query->with(['categories:id,name', 'authors:id,name,photo'])->latest()->get();
         return ProductResource::collection($products);
     }
