@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyInfoController;
+use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -53,6 +55,10 @@ Route::get('/galleries', [GalleryController::class, 'index']);
 
 Route::get('/random-products', [ProductController::class, 'randomProducts']);
 
+Route::get('/divisions', [AddressController::class, 'divisions']);
+Route::get('/districts', [AddressController::class, 'districts']);
+Route::get('/areas', [AddressController::class, 'areas']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/orders', [OrderController::class, 'store']);
@@ -99,7 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
         Route::delete('/products/{id}', [ProductController::class, 'destroy']);
-        
+
         Route::delete('/publishers/{id}', [PublisherController::class, 'destroy']);
 
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
@@ -115,6 +121,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/company-info', [CompanyInfoController::class, 'update']);
         Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
 
+        Route::get('/delivery-charge', [DeliveryChargeController::class, 'show']);
+        Route::put('/delivery-charge', [DeliveryChargeController::class, 'update']);
     });
 
     Route::middleware(['role:developer'])->group(function () {});
