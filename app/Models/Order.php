@@ -20,6 +20,12 @@ class Order extends Model
         'paid_amount',
         'due_amount',
         'status',
+        'delivery_charge',
+        'shipping_details',
+    ];
+
+    protected $casts = [
+        'shipping_details' => 'array',
     ];
 
     public function user()

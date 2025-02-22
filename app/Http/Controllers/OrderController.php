@@ -146,4 +146,63 @@ class OrderController extends Controller
 
         return response()->json($orders);
     }
+
+    public function onlineOrder(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'products' => 'required|array',
+            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric|min:0',
+            'delivery_charge' => 'required|numeric|min:0',
+            'name' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'alt_phone' => 'nullable|string',
+            'addressData' => 'required|array',
+            'addressData.area_id' => 'required|exists:areas,id',
+        ]);
+
+        $totalPrice = array_sum(array_map(function ($item) {
+            return $item['quantity'] * $item['price'];
+        }, $request->products));
+
+        $deliveryCharge = $request->delivery_charge;
+        $payableAmount = $totalPrice + $deliveryCharge;
+
+        $shippingDetails = [
+            'name'      => $request->name,
+            'phone'     => $request->phone,
+            'alt_phone' => $request->alt_phone,
+            'address'   => $request->address,
+            'area_id'   => $request->addressData['area_id'],
+        ];
+
+        $order = Order::create([
+            'user_id'             => $request->user_id,
+            'total_price'         => $totalPrice,
+            'delivery_charge'     => $deliveryCharge,
+            'discount_percentage' => 0,
+            'discount_amount'     => 0,
+            'adjust_amount'       => 0,
+            'payable_amount'      => $payableAmount,
+            'paid_amount'         => 0,
+            'due_amount'          => $payableAmount,
+            'type'                => 'online',
+            'status'              => 'Pending',
+            'shipping_details'    => $shippingDetails,
+        ]);
+
+        foreach ($request->products as $product) {
+            OrderDetail::create([
+                'order_id'   => $order->id,
+                'product_id' => $product['product_id'],
+                'quantity'   => $product['quantity'],
+                'price'      => $product['price'],
+            ]);
+        }
+
+        return response()->json($order->load('orderDetails.product'), 201);
+    }
 }
