@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Payment;
@@ -204,5 +205,38 @@ class OrderController extends Controller
         }
 
         return response()->json($order->load('orderDetails.product'), 201);
+    }
+
+    public function myOrders(Request $request)
+    {
+        $user = $request->user();
+
+        $orders = Order::with(['orderDetails.product', 'payments'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($orders);
+    }
+
+    public function myOrder(Request $request, $id)
+    {
+        $user = $request->user();
+
+        $order = Order::with(['orderDetails.product', 'payments'])
+            ->where('user_id', $user->id)
+            ->findOrFail($id);
+
+        $shipping_details = $order->shipping_details;
+        if (isset($shipping_details['area_id'])) {
+            $area = Area::with('district')->find($shipping_details['area_id']);
+            if ($area) {
+                $shipping_details['area_name'] = $area->name;
+                $shipping_details['district_name'] = $area->district ? $area->district->name : null;
+            }
+            $order->shipping_details = $shipping_details;
+        }
+
+        return response()->json($order);
     }
 }
