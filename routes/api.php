@@ -59,6 +59,8 @@ Route::get('/divisions', [AddressController::class, 'divisions']);
 Route::get('/districts', [AddressController::class, 'districts']);
 Route::get('/areas', [AddressController::class, 'areas']);
 
+Route::get('/delivery-charge', [DeliveryChargeController::class, 'show']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/orders', [OrderController::class, 'store']);
@@ -125,7 +127,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/company-info', [CompanyInfoController::class, 'update']);
         Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
 
-        Route::get('/delivery-charge', [DeliveryChargeController::class, 'show']);
+
         Route::put('/delivery-charge', [DeliveryChargeController::class, 'update']);
     });
 
