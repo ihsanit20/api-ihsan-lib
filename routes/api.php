@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/stocks', [StockController::class, 'store']);
         Route::put('/stocks/{id}', [StockController::class, 'update']);
+
+        Route::get('/summary', [SummaryController::class, 'getIncomesAndExpenses']);
     });
 
     Route::middleware(['role:admin,developer'])->group(function () {
