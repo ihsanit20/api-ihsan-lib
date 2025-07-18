@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\IncomeExpenseHeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -38,6 +39,9 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::get('/publishers', [PublisherController::class, 'index']);
 Route::get('/publishers/{id}', [PublisherController::class, 'show']);
+
+Route::get('/income-expense-heads', [IncomeExpenseHeadController::class, 'index']);
+Route::get('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
@@ -97,6 +101,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/publishers/{id}', [PublisherController::class, 'update']);
         Route::post('/publishers/{id}/photo', [PublisherController::class, 'uploadPhoto']);
 
+        Route::post('/income-expense-heads', [IncomeExpenseHeadController::class, 'store']);
+        Route::put('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'update']);
+
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
 
@@ -117,6 +124,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::delete('/publishers/{id}', [PublisherController::class, 'destroy']);
 
+        Route::delete('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'destroy']);
+
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
         Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
@@ -129,7 +138,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::put('/company-info', [CompanyInfoController::class, 'update']);
         Route::post('/upload-logo', [CompanyInfoController::class, 'uploadLogo']);
-
 
         Route::put('/delivery-charge', [DeliveryChargeController::class, 'update']);
     });
