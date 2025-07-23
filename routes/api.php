@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomeExpenseHeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -46,6 +47,9 @@ Route::get('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 's
 
 Route::get('/incomes', [IncomeController::class, 'index']);
 Route::get('/incomes/{id}', [IncomeController::class, 'show']);
+
+Route::get('/expenses', [ExpenseController::class, 'index']);
+Route::get('/expenses/{id}', [ExpenseController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
@@ -110,6 +114,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/incomes', [IncomeController::class, 'store']);
         Route::put('/incomes/{id}', [IncomeController::class, 'update']);
+
+        Route::post('/expenses', [ExpenseController::class, 'store']);
+        Route::put('/expenses/{id}', [ExpenseController::class, 'update']);
 
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
