@@ -9,7 +9,9 @@ class IncomeController extends Controller
 {
     public function index()
     {
-        $incomes = Income::get();
+        $incomes = Income::query()
+            ->with('incomeHead:id,type,name')
+            ->get();
 
         return response()->json($incomes);
     }
@@ -81,7 +83,7 @@ class IncomeController extends Controller
     private function validatedData($request, $id = null): array
     {
         return $request->validate([
-            'date' => 'required|date_format:YYYY-MM-DD',
+            'date' => 'required',
             'income_expense_head_id' => 'required|numeric',
             'amount' => 'required|numeric',
             'description' => 'required|string',

@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Income extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function incomeHead()
+    {
+        return $this->belongsTo(IncomeExpenseHead::class, 'income_expense_head_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
