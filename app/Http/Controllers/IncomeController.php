@@ -26,7 +26,7 @@ class IncomeController extends Controller
 
         return response()->json([
             'message' => 'Income created successfully',
-            'income_expense_head' => $income
+            'income' => $income
         ], 201);
     }
 
@@ -59,7 +59,7 @@ class IncomeController extends Controller
 
         return response()->json([
             'message' => 'Income updated successfully',
-            'income_expense_head' => $income
+            'income' => $income
         ]);
     }
 
