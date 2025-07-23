@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\IncomeExpenseHeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -42,6 +43,9 @@ Route::get('/publishers/{id}', [PublisherController::class, 'show']);
 
 Route::get('/income-expense-heads', [IncomeExpenseHeadController::class, 'index']);
 Route::get('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'show']);
+
+Route::get('/incomes', [IncomeController::class, 'index']);
+Route::get('/incomes/{id}', [IncomeController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
@@ -104,6 +108,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/income-expense-heads', [IncomeExpenseHeadController::class, 'store']);
         Route::put('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'update']);
 
+        Route::post('/incomes', [IncomeController::class, 'store']);
+        Route::put('/incomes/{id}', [IncomeController::class, 'update']);
+
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
 
@@ -125,6 +132,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/publishers/{id}', [PublisherController::class, 'destroy']);
 
         Route::delete('/income-expense-heads/{id}', [IncomeExpenseHeadController::class, 'destroy']);
+
+        Route::delete('/incomes/{id}', [IncomeController::class, 'destroy']);
 
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
