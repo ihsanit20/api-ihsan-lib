@@ -25,7 +25,7 @@ class IncomeController extends Controller
         );
 
         return response()->json([
-            'message' => 'Publisher created successfully',
+            'message' => 'Income created successfully',
             'income_expense_head' => $income
         ], 201);
     }
@@ -36,7 +36,7 @@ class IncomeController extends Controller
 
         if (!$income) {
             return response()->json([
-                'message' => 'Publisher not found'
+                'message' => 'Income not found'
             ], 404);
         }
 
@@ -49,7 +49,7 @@ class IncomeController extends Controller
 
         if (!$income) {
             return response()->json([
-                'message' => 'Publisher not found'
+                'message' => 'Income not found'
             ], 404);
         }
 
@@ -58,7 +58,7 @@ class IncomeController extends Controller
         );
 
         return response()->json([
-            'message' => 'Publisher updated successfully',
+            'message' => 'Income updated successfully',
             'income_expense_head' => $income
         ]);
     }
@@ -69,14 +69,14 @@ class IncomeController extends Controller
 
         if (!$income) {
             return response()->json([
-                'message' => 'Publisher not found'
+                'message' => 'Income not found'
             ], 404);
         }
 
         $income->delete();
 
         return response()->json([
-            'message' => 'Publisher deleted successfully'
+            'message' => 'Income deleted successfully'
         ]);
     }
 
