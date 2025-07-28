@@ -12,9 +12,17 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::with(['user:id,name,phone', 'orderDetails.product', 'payments'])
+        $orders = Order::query()
+            ->with([
+                'user:id,name,phone',
+                'orderDetails.product',
+                'payments',
+            ])
             ->when($request->type, fn($query, $type) => $query->where('type', $type))
             ->when($request->status, fn($query, $status) => $query->where('status', $status))
+            ->when($request->date, fn($query, $date) => $query->whereDate('created_at', $date))
+            ->when($request->from, fn($query, $from) => $query->whereDate('created_at', '>=', $from))
+            ->when($request->to, fn($query, $to) => $query->whereDate('created_at', '<=', $to))
             ->orderBy('created_at', 'desc')
             ->get();
 
