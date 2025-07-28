@@ -17,6 +17,7 @@ use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitorTrackingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +74,9 @@ Route::get('/districts', [AddressController::class, 'districts']);
 Route::get('/areas', [AddressController::class, 'areas']);
 
 Route::get('/delivery-charge', [DeliveryChargeController::class, 'show']);
+
+Route::post('/visitor-tracking/count', [VisitorTrackingController::class, 'track'])->withoutMiddleware('throttle');
+Route::get('/visitor-tracking/stats', [VisitorTrackingController::class, 'stats'])->withoutMiddleware('throttle');
 
 Route::middleware('auth:sanctum')->group(function () {
 
